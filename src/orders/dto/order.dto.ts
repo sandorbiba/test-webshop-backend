@@ -1,5 +1,6 @@
-import { IsString } from 'class-validator';
+import { IsArray, IsNumber, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { OrederedProductDto } from './ordered-product.dto';
 
 export class OrderDto {
   @ApiProperty()
@@ -7,10 +8,9 @@ export class OrderDto {
   customerName: string;
 
   @ApiProperty()
-  @IsString()
-  productName: string;
+  products: OrederedProductDto[];
 
   @ApiProperty()
-  @IsString()
-  finalPrice: string;
+  @IsNumber()
+  finalPrice: number;
 }

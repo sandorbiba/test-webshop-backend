@@ -11,13 +11,29 @@ export class OrdersService {
     private readonly orderModel: Model<OrderDocument>,
   ) {}
 
-  create(createOrderDto: OrderDto) {
-    const order = new this.orderModel(createOrderDto);
-    return order.save();
+  async create(createOrderDto) {
+    let order = await this.orderModel.create(createOrderDto);
+
+    order = await this.orderModel
+      .findById(order._id)
+      .populate('products.product');
+
+    const finalPrice = order.products.reduce((acc, product) => {
+      const price = product.product.productPrice * product.quantity;
+      return acc + price;
+    }, 0);
+
+    await order.updateOne({ finalPrice });
+
+    order = await this.orderModel
+      .findById(order._id)
+      .populate('products.product');
+
+    return order;
   }
 
-  findAll() {
-    return this.orderModel.find();
+  async findAll() {
+    return this.orderModel.find().populate('products.product');
   }
 
   async findOne(id: string) {
@@ -38,7 +54,6 @@ export class OrdersService {
     }
 
     order.customerName = updateOrderDto.customerName;
-    order.productName = updateOrderDto.productName;
     order.finalPrice = updateOrderDto.finalPrice;
 
     await order.save();
@@ -54,5 +69,9 @@ export class OrdersService {
     }
 
     await this.orderModel.deleteOne({ _id: id });
+  }
+
+  dropCollection() {
+    return this.orderModel.deleteMany({});
   }
 }

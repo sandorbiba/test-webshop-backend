@@ -54,4 +54,8 @@ export class ProductsService {
 
     await this.productModel.deleteOne({ _id: id });
   }
+
+  dropCollection() {
+    return this.productModel.deleteMany({});
+  }
 }

@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
-import { IsString } from 'class-validator';
+import { IsNumber, IsString } from 'class-validator';
 
 export type ProductDocument = Product & Document;
 
@@ -11,8 +11,8 @@ export class Product {
   productName: string;
 
   @Prop()
-  @IsString()
-  productPrice: string;
+  @IsNumber()
+  productPrice: Number;
 }
 
 export const ProductSchema = SchemaFactory.createForClass(Product);

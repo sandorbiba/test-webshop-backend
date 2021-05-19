@@ -43,4 +43,9 @@ export class ProductsController {
   removeProduct(@Param('id') id: string) {
     return this.productsService.removeProduct(id);
   }
+
+  @Post('/deleteall')
+  dropCollection() {
+    return this.productsService.dropCollection();
+  }
 }
